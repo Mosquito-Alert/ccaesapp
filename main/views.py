@@ -37,9 +37,21 @@ def index_par(request, ccaa=None, year=None):
     dataSet = get_tabular_data(ccaa_code, year_name)
     participation_data = get_participation_data(year_name)
 
+    update_barchart = DataUpdateMetadata.objects.get(class_name=ObservationBarChartData._meta.verbose_name)
+    update_observations = DataUpdateMetadata.objects.get(class_name=ObservationData._meta.verbose_name)
+    update_participation = DataUpdateMetadata.objects.get(class_name=ParticipationData._meta.verbose_name)
+
     all_sliced = [ [ d.n, d.month,d.category ] for d in ObservationBarChartData.objects.filter(ccaa_code=ccaa).filter(year=year)]
-    context = {'all_sliced': json.dumps(all_sliced), 'ccaa_name': ccaa_name, 'year_name': year_name,
-               'dataSet': json.dumps(dataSet), 'participation_data': json.dumps(participation_data)}
+    context = {
+        'all_sliced': json.dumps(all_sliced),
+        'ccaa_name': ccaa_name,
+        'year_name': year_name,
+        'dataSet': json.dumps(dataSet),
+        'participation_data': json.dumps(participation_data),
+        'update_barchart': update_barchart,
+        'update_observations': update_observations,
+        'update_participation': update_participation
+    }
     return render(request, 'main/index.html', context)
 
 # Create your views here.

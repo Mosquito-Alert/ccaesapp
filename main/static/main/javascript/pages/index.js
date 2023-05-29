@@ -23,10 +23,10 @@
                 text: '',
                 align: 'left'
             },
-            subtitle: {
+            /*subtitle: {
                 text: 'Fuente: <a href="#" target="_blank">Mosquito Alert</a>',
                 align: 'left'
-            },
+            },*/
 
             yAxis: {
                 title: {
