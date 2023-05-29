@@ -1,0 +1,15 @@
+ccaesapp/settings_local.py
+ccaesapp/settings_local*
+ccaesapp/settings/local.pyc
+main/static/main/javascript/vendor/node_modules
+*.csv
+*.log.*
+*.log
+*.script
+*.txt
+*pyc
+*.egg-info
+.idea/*
+*.sublime-project
+*.sublime-workspace
+*.sublime*
