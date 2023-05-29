@@ -55,6 +55,7 @@
             var dataSet = JSON.parse('{{ dataSet | escapejs }}');
             var participation_data = JSON.parse('{{ participation_data | escapejs }}');
             var no_data_barchart = {% if no_data_barchart %}true{% else %}false{% endif %};
+            var kk = '{{ tabular_data_present }}';
         </script>
         <script src="{% static 'main/javascript/vendor/node_modules/highcharts/highcharts.js' %}"></script>
         <script src="{% static 'main/javascript/vendor/node_modules/highcharts/modules/series-label.js' %}"></script>

@@ -68,8 +68,8 @@ def index_par(request, ccaa=None, year=None):
 def tabular_data_present(participation_data):
     for p in participation_data:
         if p[2] != 0 or p[3] != 0 or p[4] != 0 or p[5] != 0:
-            return False
-    return True
+            return True
+    return False
 
 # Create your views here.
 @login_required
