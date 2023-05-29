@@ -1,8 +1,9 @@
 import app_config
 
-from main.models import ParticipationData
+from main.models import ParticipationData, DataUpdateMetadata
 from django.db import connection
 from datetime import datetime
+from django.utils.timezone import make_aware
 
 
 def get_ccaa_name_from_code(code):
@@ -95,6 +96,13 @@ def load_data():
         for d in data['mosquito']:
             to_write.append( ParticipationData( ccaa_name=d[0], n=d[1], category='mosquito', year=year ) )
         ParticipationData.objects.bulk_create( to_write )
+    aware_datetime = make_aware(datetime.now())
+    try:
+        d = DataUpdateMetadata.objects.get(class_name=ParticipationData._meta.verbose_name)
+        d.last_update = aware_datetime
+    except DataUpdateMetadata.DoesNotExist:
+        d = DataUpdateMetadata(class_name=ParticipationData._meta.verbose_name, last_update=aware_datetime)
+    d.save()
 
 
 def main():

@@ -1,6 +1,6 @@
 import os, sys
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "caesapp.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ccaesapp.settings")
 proj_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(proj_path)
 os.chdir(proj_path)

@@ -1,8 +1,9 @@
 import app_config
 
-from main.models import ObservationData
+from main.models import ObservationData, DataUpdateMetadata
 from django.db import connection
 from datetime import datetime
+from django.utils.timezone import make_aware
 
 BITE_INDEX = 0
 ALBOPICTUS_INDEX = 1
@@ -150,7 +151,13 @@ def load_data():
                     year=d[6]
                 ) )
     ObservationData.objects.bulk_create(to_write)
-
+    aware_datetime = make_aware(datetime.now())
+    try:
+        d = DataUpdateMetadata.objects.get(class_name=ObservationData._meta.verbose_name)
+        d.last_update=aware_datetime
+    except DataUpdateMetadata.DoesNotExist:
+        d = DataUpdateMetadata(class_name=ObservationData._meta.verbose_name, last_update=aware_datetime)
+    d.save()
 
 def main():
     load_data()

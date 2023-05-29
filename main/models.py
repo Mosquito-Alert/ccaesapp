@@ -4,12 +4,27 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
+
 # Create your models here.
 class ParticipationData(models.Model):
     ccaa_name = models.CharField(max_length=150)
     n = models.IntegerField()
     category = models.CharField(max_length=150)
     year = models.IntegerField(null=True)
+
+    class Meta:
+        verbose_name = 'participationdata'
+
+
+class ObservationBarChartData(models.Model):
+    n = models.IntegerField()
+    month = models.IntegerField()
+    category = models.CharField(max_length=150)
+    year = models.IntegerField()
+    ccaa_code = models.CharField(max_length=10)
+
+    class Meta:
+        verbose_name = 'observationbardata'
 
 
 class ObservationData(models.Model):
@@ -22,6 +37,9 @@ class ObservationData(models.Model):
     n_aegypti = models.IntegerField()
     n_culex = models.IntegerField()
     year = models.IntegerField(null=True)
+
+    class Meta:
+        verbose_name = 'observationdata'
 
 
 class NutsEurope(models.Model):
@@ -60,6 +78,12 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
+
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+
+class DataUpdateMetadata(models.Model):
+    class_name = models.CharField(max_length=150, null=True)
+    last_update = models.DateTimeField(help_text="Last time model data was updated", null=True, blank=True)
