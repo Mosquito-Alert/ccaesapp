@@ -144,7 +144,11 @@
     }
 
 
-    var chart = createChart();
+
+    var chart
+    if(no_data_barchart){
+         chart = createChart();
+    }
 
     var addSeries = function(chart, data, series_name){
         chart.addSeries({

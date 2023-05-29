@@ -42,17 +42,34 @@ def index_par(request, ccaa=None, year=None):
     update_participation = DataUpdateMetadata.objects.get(class_name=ParticipationData._meta.verbose_name)
 
     all_sliced = [ [ d.n, d.month,d.category ] for d in ObservationBarChartData.objects.filter(ccaa_code=ccaa).filter(year=year)]
+
+    no_data_barchart = True
+    if len(all_sliced) == 0:
+        no_data_barchart = False
+
+    is_tabular_data_present = tabular_data_present(participation_data)
+
     context = {
         'all_sliced': json.dumps(all_sliced),
+        'no_data_barchart': no_data_barchart,
         'ccaa_name': ccaa_name,
         'year_name': year_name,
         'dataSet': json.dumps(dataSet),
+        'tabular_data_present': is_tabular_data_present,
         'participation_data': json.dumps(participation_data),
         'update_barchart': update_barchart,
         'update_observations': update_observations,
         'update_participation': update_participation
     }
+
     return render(request, 'main/index.html', context)
+
+
+def tabular_data_present(participation_data):
+    for p in participation_data:
+        if p[2] != 0 or p[3] != 0 or p[4] != 0 or p[5] != 0:
+            return False
+    return True
 
 # Create your views here.
 @login_required
@@ -76,11 +93,19 @@ def index(request):
     update_observations = DataUpdateMetadata.objects.get(class_name=ObservationData._meta.verbose_name)
     update_participation = DataUpdateMetadata.objects.get(class_name=ParticipationData._meta.verbose_name)
 
+    no_data_barchart = True
+    if len(all_sliced) == 0:
+        no_data_barchart = False
+
+    is_tabular_data_present = tabular_data_present(participation_data)
+
     context = {
         'all_sliced': json.dumps(all_sliced),
+        'no_data_barchart': no_data_barchart,
         'ccaa_name': ccaa_name,
         'year_name': year_name,
         'dataSet': json.dumps(dataSet),
+        'tabular_data_present': is_tabular_data_present,
         'participation_data': json.dumps(participation_data),
         'update_barchart': update_barchart,
         'update_observations': update_observations,

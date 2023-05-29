@@ -6,7 +6,6 @@ main/static/main/javascript/vendor/node_modules
 *.log.*
 *.log
 *.script
-*.txt
 *pyc
 *.egg-info
 .idea/*
