@@ -1,0 +1,65 @@
+{% load static  %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block meta %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link ref="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    {% endblock %}
+    {% block title %}
+    <title>CCAES App</title>
+    {% endblock %}
+    {% block basic_css %}
+        <link href="{% static 'main/javascript/vendor/node_modules/bootstrap/dist/css/bootstrap.css' %}" rel="stylesheet">
+    {% endblock %}
+    {% block extra_css %}
+    {% endblock %}
+    {% block compat_js %}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% endblock %}
+    {% block extrahead %}
+    {% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <a class="navbar-brand" href="#">CCAES App</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+        {% if user.is_authenticated %}
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Bienvenid@, {{ user.username }}!
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+                  </ul>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+    </nav>
+    {% block main %}
+    {% endblock %}
+    {% block footer %}
+    {% endblock %}
+    {% block js %}
+        <script src="{% static 'main/javascript/vendor/node_modules/jquery/dist/jquery.js' %}"></script>
+        <script src="{% static 'main/javascript/vendor/node_modules/@popperjs/core/dist/umd/popper.min.js' %}"></script>
+        <script src="{% static 'main/javascript/vendor/node_modules/bootstrap/dist/js/bootstrap.js' %}"></script>
+    {% endblock %}
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

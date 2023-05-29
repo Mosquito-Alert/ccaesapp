@@ -1,0 +1,42 @@
+{% extends "main/base.html" %}
+{% block extra_css %}
+    .main {
+        margin-top: 20px;
+    }
+{% endblock %}
+{% block main %}
+<!--<h2>Log In</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Log In</button>
+</form>-->
+<main>
+    <div class="col-xs-12" style="height:50px;"></div>
+    <div class="container col-md-3 col-md-offset-4">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label" for="id_username">Usuario</label>
+                <input type="text" name="username" required title="" autofocus maxlength="254" class="form-control" placeholder="Tu nombre de usuario" id="id_username" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="id_password">Password</label>
+                <input type="password" name="password" required title="" class="form-control" placeholder="Tu password" id="id_password" />
+            </div>
+            {% if form.non_field_errors %}
+            <div class="mb-3">
+                <ul class='form-errors'>
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            <input role="button" class="btn btn-primary" type="submit" value="Login" />
+        </form>
+    </div>
+</main>
+{% endblock %}
+
+
