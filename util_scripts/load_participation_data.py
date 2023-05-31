@@ -96,6 +96,8 @@ def load_data():
         for d in data['mosquito']:
             to_write.append( ParticipationData( ccaa_name=d[0], n=d[1], category='mosquito', year=year ) )
         ParticipationData.objects.bulk_create( to_write )
+
+
     aware_datetime = make_aware(datetime.now())
     try:
         d = DataUpdateMetadata.objects.get(class_name=ParticipationData._meta.verbose_name)

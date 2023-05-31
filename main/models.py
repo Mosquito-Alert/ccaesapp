@@ -4,8 +4,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-
-# Create your models here.
 class ParticipationData(models.Model):
     ccaa_name = models.CharField(max_length=150)
     n = models.IntegerField()
@@ -36,7 +34,12 @@ class ObservationData(models.Model):
     n_albo = models.IntegerField()
     n_aegypti = models.IntegerField()
     n_culex = models.IntegerField()
+    n_japonicus = models.IntegerField(null=True)
+    n_koreicus = models.IntegerField(null=True)
     year = models.IntegerField(null=True)
+    trampeo_albo = models.BooleanField(null=True, blank=True)
+    ma_albo = models.BooleanField(null=True, blank=True)
+    municipi_code = models.CharField(max_length=150,null=True)
 
     class Meta:
         verbose_name = 'observationdata'
@@ -87,3 +90,18 @@ def save_user_profile(sender, instance, **kwargs):
 class DataUpdateMetadata(models.Model):
     class_name = models.CharField(max_length=150, null=True)
     last_update = models.DateTimeField(help_text="Last time model data was updated", null=True, blank=True)
+
+
+class MunicipalitiesNatCode(models.Model):
+    natcode = models.CharField(max_length=11)
+    nameunit = models.CharField(max_length=100)
+    nuts_2_code = models.CharField(max_length=4)
+    nuts_3_code = models.CharField(max_length=5)
+
+
+class NatCodePresence(models.Model):
+    natmunicipality = models.ForeignKey(MunicipalitiesNatCode, on_delete=models.CASCADE)
+    trampeo = models.BooleanField()
+    ma = models.BooleanField()
+    mosquito_class = models.CharField(null=True)
+    year = models.IntegerField(null=True)

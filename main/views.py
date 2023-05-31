@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.utils import timezone
+from datetime import date, timedelta, datetime
 from django.db import connection
 from main.models import ParticipationData, ObservationData, ObservationBarChartData, DataUpdateMetadata
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -15,7 +17,7 @@ def get_ccaa_name_from_code(code):
 
 
 def get_tabular_data(ccaa_code,year):
-    data = [[d.provincia, d.municipi, d.n_bite, d.n_albo, d.n_aegypti, d.n_culex] for d in ObservationData.objects.filter(ccaa_code=ccaa_code).filter(year=year) ]
+    data = [[d.provincia, d.municipi, d.n_albo, d.trampeo_albo, d.ma_albo, d.n_culex, d.n_bite ] for d in ObservationData.objects.filter(ccaa_code=ccaa_code).filter(year=year) ]
     return data
 
 
@@ -25,6 +27,37 @@ def get_participation_data(year):
     total_participation_bites = [[d.ccaa_name, d.n] for d in ParticipationData.objects.filter(category='bite').filter(year=year).order_by('-n')]
     return {'mosquito': total_participation_mosquitos, 'bite': total_participation_bites, 'site': total_participation_sites}
 
+
+'''
+def compute_speedmeter_params():
+    current_date = timezone.now()
+    date_7_days_ago = current_date - datetime.timedelta(days=7)
+
+    reports_last_seven = Report.objects.filter(creation_time__gte=date_7_days_ago).filter(
+        creation_time__lte=current_date)
+
+    date_intervals = []
+    days = 7
+    while days >= 0:
+        date_intervals.append(current_date - datetime.timedelta(days=days))
+        days -= 1
+
+    results = []
+    for idx, val in enumerate(date_intervals):
+        if idx + 1 >= len(date_intervals):
+            break
+        r = Report.objects.filter(creation_time__gte=date_intervals[idx]).filter(
+            creation_time__lte=date_intervals[idx + 1])
+        results.append(len(r))
+
+    total = 0
+    for result in results:
+        total = total + result
+    avg = total / len(results)
+
+    data = {'reports_last_seven': len(reports_last_seven), 'avg_last_seven': avg}
+    return data
+'''
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
@@ -83,7 +116,7 @@ def index(request):
     else:
         ccaa_name = get_ccaa_name_from_code(nuts.nuts_id)
         ccaa_code = nuts.nuts_id
-    year_name = 2022
+    year_name = 2023
 
     dataSet = get_tabular_data(ccaa_code, year_name)
     participation_data = get_participation_data(year_name)

@@ -196,10 +196,51 @@
         columns: [
             { title: 'Provincia' },
             { title: 'Municipio' },
-            { title: 'Picaduras' },
             { title: 'Mosquito tigre' },
-            { title: 'Mosquito fiebre amarilla' },
+            { title: 'Mosquito Tigre - Trampeo' },
+            { title: 'Mosquito Tigre - MA' },
             { title: 'Mosquito común' },
+            { title: 'Picaduras' }
+        ],
+        columnDefs: [
+            {
+                'targets':3,
+                'sortable': true,
+                'render': function(data, type){
+                    console.log(type);
+                    if (type === 'sort' || type === 'type') {
+                        return data;
+                    }
+                    if(data==null){
+                        return '<div style="color:gray">&#9632;Sin datos</div>';
+                    }else{
+                        if(data == true){
+                            return '<div style="color:red">&#9632;Detectado</div>';
+                        }else{
+                            return '<div style="color:green">&#9632;No detectado</div>';
+                        }
+                    }
+                }
+            },
+            {
+                'targets':4,
+                'sortable': true,
+                'render': function(data, type){
+                    console.log(type);
+                    if (type === 'sort' || type === 'type') {
+                        return data;
+                    }
+                    if(data==null){
+                        return '<div style="color:gray">&#9632;Sin datos</div>';
+                    }else{
+                        if(data == true){
+                            return '<div style="color:#FDDA0D">&#9632;Detectado</div>';
+                        }else{
+                            return '<div style="color:green">&#9632;No detectado</div>';
+                        }
+                    }
+                }
+            }
         ],
         'order': [[ 2, "desc" ]],
         pageLength: 10,

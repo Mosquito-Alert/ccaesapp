@@ -8,41 +8,76 @@
         .titulo_seccion {
             margin-top: 30px;
         }
+        .section_wrapper {
+            padding-top: 10px;
+        }
     </style>
 {% endblock %}
 
 {% block main %}
 <main class="container" style="margin-top:80px;">
-    <h1>Estadísticas {{ ccaa_name }}</h1>
+    <div class="mt-5 section_wrapper">
+        <h1>Estadísticas {{ ccaa_name }}</h1>
+        <p><b>Bienvenid@ al portal de Mosquito Alert. Aquí se muestran las estadísticas de participación y de los informes de
+        mosquitos de interés (Aedes invasores y Culex pipiens) y picaduras recibidos en la comunidad a lo largo del año en curso.</b></p>
+    </div>
     <hr>
+    <!--
+    <div class="row">
+        <div class="col-md-6">
+            <p><b>Datos enviados a la app Mosquito Alert en tiempo real desde {{ ccaa_name }}</b></p>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="col-md-6">
+            <p><b>Datos enviados a la app Mosquito Alert en tiempo real desde el mundo</b></p>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    -->
     {% if no_data_barchart %}
-    <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por mes en {{ ccaa_name }} - {{ year_name }} </h3>
-    <h5><i>Última actualización -  {{ update_barchart.last_update|timezone:"Europe/Paris" }} </i></h5>
-    <div id="chart" style="width:100%; height:400px;"></div>
+    <div class="mt-5 section_wrapper">
+        <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por mes en {{ ccaa_name }} - {{ year_name }} </h3>
+        <h5><i>Última actualización -  {{ update_barchart.last_update|timezone:"Europe/Paris" }} </i></h5>
+        <div id="chart" style="width:100%; height:400px;"></div>
+    </div>
     {% else %}
-    <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por mes en {{ ccaa_name }} - {{ year_name }} </h3>
-    <h4>No hay datos para {{ ccaa_name }} en {{ year_name }}</h4>
+    <div class="mt-5 section_wrapper">
+        <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por mes en {{ ccaa_name }} - {{ year_name }} </h3>
+        <h4>No hay datos para {{ ccaa_name }} en {{ year_name }}</h4>
+    </div>
     {% endif %}
     <hr>
     {% if tabular_data_present %}
-    <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por municipio en {{ ccaa_name }} - {{ year_name }} </h3>
-    <h5><i>Última actualización -  {{ update_observations.last_update|timezone:"Europe/Paris" }} </i></h5>
-    <table id="example" class="table table-striped" style="width:100%"></table>
+    <div class="mt-5 section_wrapper">
+        <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por municipio en {{ ccaa_name }} - {{ year_name }} </h3>
+        <p><b>La tabla muestra el número de informes recibido en cada municipio para las diferentes categorías. Para las especies
+        invasoras se indica si la presencia de estas especies ha sido previamente detectada en cada municipio por métodos tradicionales
+        de trampeo (rojo indica la detección de la especie, verde que no se ha detectado) y por Mosquito Alert (amarillo indica la detección
+        de la especie, verde que no se ha detectado)</b></p>
+        <h5><i>Última actualización -  {{ update_observations.last_update|timezone:"Europe/Paris" }} </i></h5>
+        <table id="example" class="table table-striped" style="width:100%"></table>
+    </div>
     {% else %}
-    <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por municipio en {{ ccaa_name }} - {{ year_name }} </h3>
-    <h4>No hay datos para {{ ccaa_name }} en {{ year_name }}</h4>
+    <div class="mt-5 section_wrapper">
+        <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por municipio en {{ ccaa_name }} - {{ year_name }} </h3>
+        <h4>No hay datos para {{ ccaa_name }} en {{ year_name }}</h4>
+    </div>
     {% endif %}
     <hr>
-    <h3 class="titulo_seccion">Datos de participación, número de observaciones por comunidad autónoma - {{ year_name }} </h3>
-    <h5><i>Última actualización -  {{ update_participation.last_update|timezone:"Europe/Paris" }} </i></h5>
-    <div class="row">
-        <div id="p_bites" class="col-md-6"></div>
-        <div id="p_mosquitos" class="col-md-6"></div>
-    </div>
-    <div class="row">
-        <div class="col-md-3"></div>
-        <div id="p_sites" class="col-md-6"></div>
-        <div class="col-md-3"></div>
+    <div class="mt-5 section_wrapper">
+        <h3 class="titulo_seccion">Datos de participación, número de observaciones por comunidad autónoma - {{ year_name }} </h3>
+        <h5><i>Última actualización -  {{ update_participation.last_update|timezone:"Europe/Paris" }} </i></h5>
+        <div class="row">
+            <div id="p_bites" class="col-md-6"></div>
+            <div id="p_mosquitos" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div id="p_sites" class="col-md-6"></div>
+            <div class="col-md-3"></div>
+        </div>
     </div>
 </main>
 {% endblock %}
