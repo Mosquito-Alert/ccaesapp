@@ -121,4 +121,4 @@ class RuntimeSettings(models.Model):
     value = models.TextField()
 
     def __str__(self):
-        return "{}-{}".format(self.name,self.value)
+        return "{} --> {}".format(self.name,self.value)

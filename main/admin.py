@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
-from main.models import Profile, NutsEurope
+from main.models import Profile, NutsEurope, RuntimeSettings
 
 # Register your models here.
 
@@ -12,3 +12,4 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Profile, ProfileAdmin)
+admin.site.register(RuntimeSettings)
