@@ -63,7 +63,6 @@ class NutsEurope(models.Model):
         return self.nuts_name
 
     class Meta:
-        managed = False
         db_table = 'nuts_europe'
 
 
