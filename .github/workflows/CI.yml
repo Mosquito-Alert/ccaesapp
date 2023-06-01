@@ -1,0 +1,48 @@
+name: test ccaesapp
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgis/postgis:12-2.5
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Cache dependency # caching dependency will make our build faster.
+      uses: actions/cache@v3 # for more info checkout pip section documentation at https://github.com/actions/cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev gdal-bin proj-bin proj-data libgeos-dev libgeos++-dev libproj-dev ffmpeg
+
+    - name: Setup python environment # setting python environment to 3.8
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.8'
+
+    - name: Check Python version # checking the python version to see if 3.x is installed.
+      run: python --version
+
+    - name: Install requirements # install application requirements
+      run: pip install -r requirements.txt
+
+    - name: Run Test # running tests
+      run: python manage.py test
