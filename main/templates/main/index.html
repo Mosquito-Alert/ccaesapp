@@ -30,15 +30,15 @@
     <hr>
     <div class="row">
         <div class="col-md-6 gauge_wrapper">
-            <h3 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>{{ ccaa_name }}</b></h3>
-            <h5><i>Última actualización -  {{ update_gauges.last_update|timezone:"Europe/Paris" }} </i></h5>
+            <h4 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>{{ ccaa_name }}</b></h4>
+            <h6><i>Última actualización -  {{ update_gauges.last_update|timezone:"Europe/Paris" }} </i></h6>
             <div id="container-number-ccaa"></div>
             <hr>
             <div id="container-flow-ccaa"></div>
         </div>
         <div class="col-md-6 gauge_wrapper">
-            <h3 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>el mundo</b></h3>
-            <h5><i>Última actualización -  {{ update_gauges.last_update|timezone:"Europe/Paris" }} </i></h5>
+            <h4 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>el mundo</b></h4>
+            <h6><i>Última actualización -  {{ update_gauges.last_update|timezone:"Europe/Paris" }} </i></h6>
             <div id="container-number-world"></div>
             <hr>
             <div id="container-flow-world"></div>

@@ -3,7 +3,7 @@ from django.utils import timezone
 import datetime as dt
 from datetime import date, timedelta
 from django.db import connection
-from main.models import ParticipationData, ObservationData, ObservationBarChartData, DataUpdateMetadata, SpeedMeterData
+from main.models import ParticipationData, ObservationData, ObservationBarChartData, DataUpdateMetadata, SpeedMeterData, RuntimeSettings
 from django.contrib.auth.decorators import login_required, user_passes_test
 import json
 
@@ -108,6 +108,7 @@ def index_par(request, ccaa=None, year=None):
     update_barchart = DataUpdateMetadata.objects.get(class_name=ObservationBarChartData._meta.verbose_name)
     update_observations = DataUpdateMetadata.objects.get(class_name=ObservationData._meta.verbose_name)
     update_participation = DataUpdateMetadata.objects.get(class_name=ParticipationData._meta.verbose_name)
+    update_gauges = DataUpdateMetadata.objects.get(class_name=SpeedMeterData._meta.verbose_name)
 
     all_sliced = [ [ d.n, d.month,d.category ] for d in ObservationBarChartData.objects.filter(ccaa_code=ccaa).filter(year=year)]
 
@@ -127,7 +128,8 @@ def index_par(request, ccaa=None, year=None):
         'participation_data': json.dumps(participation_data),
         'update_barchart': update_barchart,
         'update_observations': update_observations,
-        'update_participation': update_participation
+        'update_participation': update_participation,
+        'update_gauges': update_gauges,
     }
 
     return render(request, 'main/index.html', context)
@@ -151,7 +153,12 @@ def index(request):
     else:
         ccaa_name = get_ccaa_name_from_code(nuts.nuts_id)
         ccaa_code = nuts.nuts_id
-    year_name = 2022
+
+    try:
+        r = RuntimeSettings.objects.get(name='default_year')
+        year_name = int(r.value)
+    except RuntimeSettings.DoesNotExist:
+        year_name = 2023
 
     dataSet = get_tabular_data(ccaa_code, year_name)
     participation_data = get_participation_data(year_name)
@@ -160,6 +167,7 @@ def index(request):
     update_barchart = DataUpdateMetadata.objects.get(class_name=ObservationBarChartData._meta.verbose_name)
     update_observations = DataUpdateMetadata.objects.get(class_name=ObservationData._meta.verbose_name)
     update_participation = DataUpdateMetadata.objects.get(class_name=ParticipationData._meta.verbose_name)
+    update_gauges = DataUpdateMetadata.objects.get(class_name=SpeedMeterData._meta.verbose_name)
 
     no_data_barchart = True
     if len(all_sliced) == 0:
@@ -181,6 +189,7 @@ def index(request):
         'update_barchart': update_barchart,
         'update_observations': update_observations,
         'update_participation': update_participation,
+        'update_gauges': update_gauges,
         'speedmeter_data_ccaa': speedmeter_data_ccaa,
         'speedmeter_data_global': speedmeter_data_global,
     }

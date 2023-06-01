@@ -111,3 +111,14 @@ class SpeedMeterData(models.Model):
     version_UUID = models.CharField(max_length=36, primary_key=True)
     creation_time = models.DateTimeField()
     nuts_2 = models.CharField(max_length=4, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'speedmeterdata'
+
+
+class RuntimeSettings(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    value = models.TextField()
+
+    def __str__(self):
+        return "{}-{}".format(self.name,self.value)
