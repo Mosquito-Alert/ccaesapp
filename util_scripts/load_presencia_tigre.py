@@ -26,7 +26,7 @@ def load_data(year):
 
 
 def main():
-    load_data(2022)
+    load_data(2023)
 
 
 if __name__ == '__main__':
