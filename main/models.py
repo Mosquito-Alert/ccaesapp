@@ -96,6 +96,7 @@ class MunicipalitiesNatCode(models.Model):
     nameunit = models.CharField(max_length=100)
     nuts_2_code = models.CharField(max_length=4)
     nuts_3_code = models.CharField(max_length=5)
+    gisco_id = models.CharField(max_length=8, null=True)
 
 
 class NatCodePresence(models.Model):

@@ -75,12 +75,12 @@ def get_muni_table():
     cursor.execute("""
         select
         distinct
-        marn.lau_name,
+        lrm.lau_name,
         lrm.lau_id as natcode
         from
-        map_aux_reports_newmap marn,
+        main_municipalitiesnatcode mm,
         lau_rg_01m_2018_4326 lrm
-        where marn.lau_code  = lrm.gisco_id and marn.nuts3_code ilike 'ES%' and marn.nuts3_code is not null and marn.lau_code is not null
+        where mm.gisco_id  = lrm.gisco_id and mm.nuts_3_code ilike 'ES%'
     """)
     results = cursor.fetchall()
     for r in results:
@@ -88,25 +88,35 @@ def get_muni_table():
     return retval
 
 def get_provs_munis(ccaa_code):
-    ccaa_param = ccaa_code + '%'
     data = {}
     cursor = connection.cursor()
+
+    # cursor.execute("""
+    #     select distinct marn.nuts3_code, nuts3_name, lau_code, lau_name
+    #     from map_aux_reports_newmap marn where marn.nuts3_code ilike %s and marn.nuts3_code is not null and marn.lau_code is not null
+    # """, (ccaa_param,))
+
     cursor.execute("""
-            select distinct marn.nuts3_code, nuts3_name, lau_code, lau_name
-            from map_aux_reports_newmap marn where marn.nuts3_code ilike %s and marn.nuts3_code is not null and marn.lau_code is not null
-        """, (ccaa_param,))
+        select distinct ne.nuts_id, ne.nuts_name, lrm.gisco_id, lrm.lau_name
+        from
+        main_municipalitiesnatcode mm,
+        nuts_europe ne,
+        lau_rg_01m_2018_4326 lrm
+        where mm.gisco_id = lrm.gisco_id and mm.nuts_3_code = ne.nuts_id and mm.nuts_2_code = %s order by 4
+    """, (ccaa_code,))
+
     results = cursor.fetchall()
     for r in results:
         r_provincia = r[1]
-        r_comarca = r[3]
+        r_muni = r[3]
         try:
             data[r_provincia]
         except KeyError:
             data[r_provincia] = {}
         try:
-            data[r_provincia][r_comarca]
+            data[r_provincia][r_muni]
         except KeyError:
-            data[r_provincia][r_comarca] = [0,0,0,0]
+            data[r_provincia][r_muni] = [0,0,0,0]
     return data
 
 def get_tabular_data(ccaa_code,year):
@@ -118,26 +128,42 @@ def get_tabular_data(ccaa_code,year):
     culex_data = get_culex_data(ccaa_code,year)
 
     for b in bite_data:
-        data_array = provs_munis[b[0]][b[1]]
-        data_array[BITE_INDEX] = b[2]
+        try:
+            data_array = provs_munis[b[0]][b[1]]
+            data_array[BITE_INDEX] = b[2]
+        except KeyError:
+            pass
 
     for b in albo_data:
-        data_array = provs_munis[b[0]][b[1]]
-        data_array[ALBOPICTUS_INDEX] = b[2]
+        try:
+            data_array = provs_munis[b[0]][b[1]]
+            data_array[ALBOPICTUS_INDEX] = b[2]
+        except KeyError:
+            pass
 
     for b in aegy_data:
-        data_array = provs_munis[b[0]][b[1]]
-        data_array[AEGYPTI_INDEX] = b[2]
+        try:
+            data_array = provs_munis[b[0]][b[1]]
+            data_array[AEGYPTI_INDEX] = b[2]
+        except KeyError:
+            pass
+
 
     for b in culex_data:
-        data_array = provs_munis[b[0]][b[1]]
-        data_array[CULEX_INDEX] = b[2]
+        try:
+            data_array = provs_munis[b[0]][b[1]]
+            data_array[CULEX_INDEX] = b[2]
+        except KeyError:
+            pass
 
     data = []
     for provincia in provs_munis:
         for municipi in provs_munis[provincia]:
-            dades = provs_munis[provincia][municipi]
-            data.append( [ provincia, municipi, dades[BITE_INDEX], dades[ALBOPICTUS_INDEX], dades[AEGYPTI_INDEX], dades[CULEX_INDEX], year ] )
+            try:
+                dades = provs_munis[provincia][municipi]
+                data.append( [ provincia, municipi, dades[BITE_INDEX], dades[ALBOPICTUS_INDEX], dades[AEGYPTI_INDEX], dades[CULEX_INDEX], year ] )
+            except KeyError:
+                data.append([provincia, municipi, 0, 0, 0, 0, year])
     return data
 
 def get_presence_data():

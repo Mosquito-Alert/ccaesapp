@@ -84,7 +84,6 @@ def get_participation_data(year):
 
 def load_data():
     this_year = datetime.now().year
-    ParticipationData.objects.all().delete()
     for year in range(2020,this_year+1):
         print("Loading data for year {0}".format(year))
         data = get_participation_data(year)
@@ -95,8 +94,8 @@ def load_data():
             to_write.append( ParticipationData( ccaa_name=d[0], n=d[1], category='site', year=year ) )
         for d in data['mosquito']:
             to_write.append( ParticipationData( ccaa_name=d[0], n=d[1], category='mosquito', year=year ) )
-        ParticipationData.objects.bulk_create( to_write )
-
+    ParticipationData.objects.all().delete()
+    ParticipationData.objects.bulk_create( to_write )
 
     aware_datetime = make_aware(datetime.now())
     try:
