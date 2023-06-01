@@ -62,37 +62,6 @@ def get_speedmeter_data(ccaa=None):
     return data
 
 
-'''
-def compute_speedmeter_params():
-    current_date = timezone.now()
-    date_7_days_ago = current_date - datetime.timedelta(days=7)
-
-    reports_last_seven = Report.objects.filter(creation_time__gte=date_7_days_ago).filter(
-        creation_time__lte=current_date)
-
-    date_intervals = []
-    days = 7
-    while days >= 0:
-        date_intervals.append(current_date - datetime.timedelta(days=days))
-        days -= 1
-
-    results = []
-    for idx, val in enumerate(date_intervals):
-        if idx + 1 >= len(date_intervals):
-            break
-        r = Report.objects.filter(creation_time__gte=date_intervals[idx]).filter(
-            creation_time__lte=date_intervals[idx + 1])
-        results.append(len(r))
-
-    total = 0
-    for result in results:
-        total = total + result
-    avg = total / len(results)
-
-    data = {'reports_last_seven': len(reports_last_seven), 'avg_last_seven': avg}
-    return data
-'''
-
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def index_par(request, ccaa=None, year=None):
