@@ -333,7 +333,6 @@
                 'targets':4,
                 'sortable': true,
                 'render': function(data, type){
-                    console.log(type);
                     if (type === 'sort' || type === 'type') {
                         return data;
                     }
