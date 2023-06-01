@@ -30,8 +30,7 @@ def get_participation_data(year):
 
 
 def get_speedmeter_data(ccaa=None):
-    #current_date = timezone.now()
-    current_date = dt.date(2022, 7, 10)
+    current_date = timezone.now()
     date_7_days_ago = current_date - timedelta(days=7)
     if ccaa is None:
         reports_last_seven = SpeedMeterData.objects.filter(creation_time__gte=date_7_days_ago).filter(creation_time__lte=current_date)
