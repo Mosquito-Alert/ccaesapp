@@ -21,12 +21,12 @@ def load_data(year):
             except MunicipalitiesNatCode.DoesNotExist:
                 print("Municipality with code {0} does not exist".format(row[0]))
 
-    NatCodePresence.objects.all().delete()
+    NatCodePresence.objects.filter(year=year).delete()
     NatCodePresence.objects.bulk_create(to_write)
 
 
 def main():
-    load_data(2023)
+    load_data(2022)
 
 
 if __name__ == '__main__':

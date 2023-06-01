@@ -9,7 +9,13 @@
             margin-top: 30px;
         }
         .section_wrapper {
-            padding-top: 10px;
+            padding-top: 5px;
+        }
+        .gauge_wrapper {
+            padding-left: 60px;
+            padding-right: 60px;
+            padding-bottom: 60px;
+            padding-top: 0px;
         }
     </style>
 {% endblock %}
@@ -22,36 +28,39 @@
         mosquitos de interés (Aedes invasores y Culex pipiens) y picaduras recibidos en la comunidad a lo largo del año en curso.</b></p>
     </div>
     <hr>
-    <!--
     <div class="row">
-        <div class="col-md-6">
-            <p><b>Datos enviados a la app Mosquito Alert en tiempo real desde {{ ccaa_name }}</b></p>
-            <div></div>
-            <div></div>
+        <div class="col-md-6 gauge_wrapper">
+            <h3 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>{{ ccaa_name }}</b></h3>
+            <h5><i>Última actualización -  {{ update_gauges.last_update|timezone:"Europe/Paris" }} </i></h5>
+            <div id="container-number-ccaa"></div>
+            <hr>
+            <div id="container-flow-ccaa"></div>
         </div>
-        <div class="col-md-6">
-            <p><b>Datos enviados a la app Mosquito Alert en tiempo real desde el mundo</b></p>
-            <div></div>
-            <div></div>
+        <div class="col-md-6 gauge_wrapper">
+            <h3 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>el mundo</b></h3>
+            <h5><i>Última actualización -  {{ update_gauges.last_update|timezone:"Europe/Paris" }} </i></h5>
+            <div id="container-number-world"></div>
+            <hr>
+            <div id="container-flow-world"></div>
         </div>
     </div>
-    -->
+    <hr>
     {% if no_data_barchart %}
     <div class="mt-5 section_wrapper">
-        <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por mes en {{ ccaa_name }} - {{ year_name }} </h3>
+        <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por mes en <b>{{ ccaa_name }} - {{ year_name }}</b></h3>
         <h5><i>Última actualización -  {{ update_barchart.last_update|timezone:"Europe/Paris" }} </i></h5>
         <div id="chart" style="width:100%; height:400px;"></div>
     </div>
     {% else %}
     <div class="mt-5 section_wrapper">
-        <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por mes en {{ ccaa_name }} - {{ year_name }} </h3>
+        <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por mes en <b>{{ ccaa_name }} - {{ year_name }}</b></h3>
         <h4>No hay datos para {{ ccaa_name }} en {{ year_name }}</h4>
     </div>
     {% endif %}
     <hr>
     {% if tabular_data_present %}
     <div class="mt-5 section_wrapper">
-        <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por municipio en {{ ccaa_name }} - {{ year_name }} </h3>
+        <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por municipio en <b>{{ ccaa_name }} - {{ year_name }}</b></h3>
         <p><b>La tabla muestra el número de informes recibido en cada municipio para las diferentes categorías. Para las especies
         invasoras se indica si la presencia de estas especies ha sido previamente detectada en cada municipio por métodos tradicionales
         de trampeo (rojo indica la detección de la especie, verde que no se ha detectado) y por Mosquito Alert (amarillo indica la detección
@@ -67,7 +76,7 @@
     {% endif %}
     <hr>
     <div class="mt-5 section_wrapper">
-        <h3 class="titulo_seccion">Datos de participación, número de observaciones por comunidad autónoma - {{ year_name }} </h3>
+        <h3 class="titulo_seccion">Datos de participación, número de observaciones por <b>comunidad autónoma - {{ year_name }}</b></h3>
         <h5><i>Última actualización -  {{ update_participation.last_update|timezone:"Europe/Paris" }} </i></h5>
         <div class="row">
             <div id="p_bites" class="col-md-6"></div>
@@ -91,9 +100,15 @@
             var participation_data = JSON.parse('{{ participation_data | escapejs }}');
             var no_data_barchart = {% if no_data_barchart %}true{% else %}false{% endif %};
             var kk = '{{ tabular_data_present }}';
+            var n_7_days_ccaa = {{ speedmeter_data_ccaa.reports_last_seven }};
+            var avg_7_days_ccaa = {{ speedmeter_data_ccaa.avg_last_seven|stringformat:".2f" }};
+            var n_7_days_world = {{ speedmeter_data_global.reports_last_seven }};
+            var avg_7_days_world = {{ speedmeter_data_global.avg_last_seven|stringformat:".2f" }};
         </script>
         <script src="{% static 'main/javascript/vendor/node_modules/highcharts/highcharts.js' %}"></script>
+        <script src="{% static 'main/javascript/vendor/node_modules/highcharts/highcharts-more.js' %}"></script>
         <script src="{% static 'main/javascript/vendor/node_modules/highcharts/modules/series-label.js' %}"></script>
+        <script src="{% static 'main/javascript/vendor/node_modules/highcharts/modules/solid-gauge.js' %}"></script>
         <script src="{% static 'main/javascript/vendor/node_modules/highcharts/modules/exporting.js' %}"></script>
         <script src="{% static 'main/javascript/vendor/node_modules/highcharts/modules/export-data.js' %}"></script>
         <script src="{% static 'main/javascript/vendor/node_modules/highcharts/modules/accessibility.js' %}"></script>

@@ -105,3 +105,9 @@ class NatCodePresence(models.Model):
     ma = models.BooleanField()
     mosquito_class = models.CharField(null=True)
     year = models.IntegerField(null=True)
+
+
+class SpeedMeterData(models.Model):
+    version_UUID = models.CharField(max_length=36, primary_key=True)
+    creation_time = models.DateTimeField()
+    nuts_2 = models.CharField(max_length=4, null=True, blank=True)

@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.utils import timezone
-from datetime import date, timedelta, datetime
+import datetime as dt
+from datetime import date, timedelta
 from django.db import connection
-from main.models import ParticipationData, ObservationData, ObservationBarChartData, DataUpdateMetadata
+from main.models import ParticipationData, ObservationData, ObservationBarChartData, DataUpdateMetadata, SpeedMeterData
 from django.contrib.auth.decorators import login_required, user_passes_test
 import json
 
@@ -26,6 +27,40 @@ def get_participation_data(year):
     total_participation_sites = [[d.ccaa_name, d.n] for d in ParticipationData.objects.filter(category='site').filter(year=year).order_by('-n')]
     total_participation_bites = [[d.ccaa_name, d.n] for d in ParticipationData.objects.filter(category='bite').filter(year=year).order_by('-n')]
     return {'mosquito': total_participation_mosquitos, 'bite': total_participation_bites, 'site': total_participation_sites}
+
+
+def get_speedmeter_data(ccaa=None):
+    #current_date = timezone.now()
+    current_date = dt.date(2022, 7, 10)
+    date_7_days_ago = current_date - timedelta(days=7)
+    if ccaa is None:
+        reports_last_seven = SpeedMeterData.objects.filter(creation_time__gte=date_7_days_ago).filter(creation_time__lte=current_date)
+    else:
+        reports_last_seven = SpeedMeterData.objects.filter(nuts_2=ccaa).filter(creation_time__gte=date_7_days_ago).filter(creation_time__lte=current_date)
+
+    date_intervals = []
+    days = 7
+    while days >= 0:
+        date_intervals.append(current_date - timedelta(days=days))
+        days -= 1
+
+    results = []
+    for idx, val in enumerate(date_intervals):
+        if idx + 1 >= len(date_intervals):
+            break
+        if ccaa is None:
+            r = SpeedMeterData.objects.filter(creation_time__gte=date_intervals[idx]).filter(creation_time__lte=date_intervals[idx + 1])
+        else:
+            r = SpeedMeterData.objects.filter(nuts_2=ccaa).filter(creation_time__gte=date_intervals[idx]).filter(creation_time__lte=date_intervals[idx + 1])
+        results.append(len(r))
+
+    total = 0
+    for result in results:
+        total = total + result
+    avg = total / len(results)
+
+    data = {'reports_last_seven': len(reports_last_seven), 'avg_last_seven': avg}
+    return data
 
 
 '''
@@ -116,7 +151,7 @@ def index(request):
     else:
         ccaa_name = get_ccaa_name_from_code(nuts.nuts_id)
         ccaa_code = nuts.nuts_id
-    year_name = 2023
+    year_name = 2022
 
     dataSet = get_tabular_data(ccaa_code, year_name)
     participation_data = get_participation_data(year_name)
@@ -132,6 +167,9 @@ def index(request):
 
     is_tabular_data_present = tabular_data_present(participation_data)
 
+    speedmeter_data_ccaa = get_speedmeter_data(ccaa_code)
+    speedmeter_data_global = get_speedmeter_data()
+
     context = {
         'all_sliced': json.dumps(all_sliced),
         'no_data_barchart': no_data_barchart,
@@ -142,6 +180,8 @@ def index(request):
         'participation_data': json.dumps(participation_data),
         'update_barchart': update_barchart,
         'update_observations': update_observations,
-        'update_participation': update_participation
+        'update_participation': update_participation,
+        'speedmeter_data_ccaa': speedmeter_data_ccaa,
+        'speedmeter_data_global': speedmeter_data_global,
     }
     return render(request, 'main/index.html', context)

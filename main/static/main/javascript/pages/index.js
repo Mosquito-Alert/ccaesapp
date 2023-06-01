@@ -1,4 +1,5 @@
 (function($){
+
     Highcharts.setOptions({
         lang: {
             downloadCSV: "Descargar hoja de cálculo CSV",
@@ -13,6 +14,113 @@
             hideData: "Esconder datos",
         }
     });
+
+    var gaugeOptions = {
+        chart: {
+            type: 'solidgauge'
+        },
+        title: null,
+        pane: {
+            center: ['50%', '85%'],
+            size: '100%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+        tooltip: {
+            enabled: false
+        },
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.1, '#55BF3B'], // green
+                [0.5, '#DDDF0D'], // yellow
+                [0.9, '#DF5353'] // red
+            ],
+            lineWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            title: {
+                y: -150
+            },
+            labels: {
+                y: 16
+            }
+        },
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                }
+            }
+        }
+    };
+
+    var createNReportGauge = function( div_id, data, min, max ){
+        // The speed gauge
+        var numberReports = Highcharts.chart(div_id, Highcharts.merge(gaugeOptions, {
+            yAxis: {
+                min: min,
+                max: max,
+                title: {
+                    text: 'Número de informes durante los últimos 7 días'
+                }
+            },
+
+            credits: {
+                enabled: false
+            },
+
+            series: [{
+                name: 'N',
+                data: [data],
+                dataLabels: {
+                    format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
+                           '<span style="font-size:12px;color:silver">Informes</span></div>'
+                },
+                tooltip: {
+                    valueSuffix: ' Informes'
+                }
+            }]
+
+        }));
+        return numberReports;
+    }
+
+    var createFlowReportGauge = function(div_id, data, min, max){
+        var reportFlow = Highcharts.chart(div_id, Highcharts.merge(gaugeOptions, {
+            yAxis: {
+                min: min,
+                max: max,
+                title: {
+                    text: 'Media de número de informes por día durante los últimos 7 días'
+                }
+            },
+
+            series: [{
+                name: 'Reports',
+                data: [data],
+                dataLabels: {
+                    format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y:.1f}</span><br/>' +
+                           '<span style="font-size:12px;color:silver">Informes</span></div>'
+                },
+                tooltip: {
+                    valueSuffix: ' Informes'
+                }
+            }]
+
+        }));
+        return reportFlow;
+    }
 
     var createChart = function(){
         var chart = Highcharts.chart('chart', {
@@ -278,6 +386,11 @@
     highlight_ccaa(chart_bites);
     highlight_ccaa(chart_mosquitos);
     highlight_ccaa(chart_sites);
+
+    createNReportGauge('container-number-ccaa',n_7_days_ccaa,0,200);
+    createFlowReportGauge('container-flow-ccaa',avg_7_days_ccaa,0,30);
+    createNReportGauge('container-number-world',n_7_days_world,0,2000);
+    createFlowReportGauge('container-flow-world',avg_7_days_world,0,200);
 
 
 })(jQuery);
