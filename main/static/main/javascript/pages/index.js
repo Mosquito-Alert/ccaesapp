@@ -348,7 +348,7 @@
                 }
             }
         ],
-        'order': [[ 2, "desc" ]],
+        'order': [[ 6, "desc" ]],
         pageLength: 10,
         language: dt_es,
         dom: 'Bfrtip',
