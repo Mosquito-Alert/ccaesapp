@@ -9,6 +9,8 @@ BITE_INDEX = 0
 ALBOPICTUS_INDEX = 1
 AEGYPTI_INDEX = 2
 CULEX_INDEX = 3
+JAPONICUS_INDEX = 4
+KOREICUS_INDEX = 4
 
 def get_bite_data(ccaa_code,year):
     ccaa_param = ccaa_code + '%'
@@ -48,6 +50,36 @@ def get_culex_data(ccaa_code,year):
         (select distinct marn.nuts3_code, nuts3_name, lau_code, lau_name
         from map_aux_reports_newmap marn where marn.nuts3_code ilike %s and marn.nuts3_code is not null and marn.lau_code is not null) as t1
         where type='adult' and date_part('year',observation_date) = %s and (private_webmap_layer = 'culex_probable' or private_webmap_layer = 'culex_confirmed') and
+        marn.nuts3_code = t1.nuts3_code and marn.lau_code = t1.lau_code group by marn.nuts3_name, marn.lau_name, marn.nuts3_code
+    """, (ccaa_param,year,))
+    results = cursor.fetchall()
+    return results
+
+
+def get_japonicus_data(ccaa_code,year):
+    ccaa_param = ccaa_code + '%'
+    cursor = connection.cursor()
+    cursor.execute("""
+        select marn.nuts3_name, marn.lau_name, count(version_uuid) as n, marn.nuts3_code
+        from map_aux_reports_newmap marn,
+        (select distinct marn.nuts3_code, nuts3_name, lau_code, lau_name
+        from map_aux_reports_newmap marn where marn.nuts3_code ilike %s and marn.nuts3_code is not null and marn.lau_code is not null) as t1
+        where type='adult' and date_part('year',observation_date) = %s and (private_webmap_layer = 'japonicus_probable' or private_webmap_layer = 'japonicus_confirmed') and
+        marn.nuts3_code = t1.nuts3_code and marn.lau_code = t1.lau_code group by marn.nuts3_name, marn.lau_name, marn.nuts3_code
+    """, (ccaa_param,year,))
+    results = cursor.fetchall()
+    return results
+
+
+def get_koreicus_data(ccaa_code,year):
+    ccaa_param = ccaa_code + '%'
+    cursor = connection.cursor()
+    cursor.execute("""
+        select marn.nuts3_name, marn.lau_name, count(version_uuid) as n, marn.nuts3_code
+        from map_aux_reports_newmap marn,
+        (select distinct marn.nuts3_code, nuts3_name, lau_code, lau_name
+        from map_aux_reports_newmap marn where marn.nuts3_code ilike %s and marn.nuts3_code is not null and marn.lau_code is not null) as t1
+        where type='adult' and date_part('year',observation_date) = %s and (private_webmap_layer = 'koreicus_probable' or private_webmap_layer = 'koreicus_confirmed') and
         marn.nuts3_code = t1.nuts3_code and marn.lau_code = t1.lau_code group by marn.nuts3_name, marn.lau_name, marn.nuts3_code
     """, (ccaa_param,year,))
     results = cursor.fetchall()
@@ -116,7 +148,7 @@ def get_provs_munis(ccaa_code):
         try:
             data[r_provincia][r_muni]
         except KeyError:
-            data[r_provincia][r_muni] = [0,0,0,0]
+            data[r_provincia][r_muni] = [0,0,0,0,0,0]
     return data
 
 def get_tabular_data(ccaa_code,year):
@@ -126,6 +158,8 @@ def get_tabular_data(ccaa_code,year):
     albo_data = get_albopictus_data(ccaa_code,year)
     aegy_data = get_aegypti_data(ccaa_code,year)
     culex_data = get_culex_data(ccaa_code,year)
+    japonicus_data = get_japonicus_data(ccaa_code,year)
+    koreicus_data = get_koreicus_data(ccaa_code,year)
 
     for b in bite_data:
         try:
@@ -148,11 +182,24 @@ def get_tabular_data(ccaa_code,year):
         except KeyError:
             pass
 
-
     for b in culex_data:
         try:
             data_array = provs_munis[b[0]][b[1]]
             data_array[CULEX_INDEX] = b[2]
+        except KeyError:
+            pass
+
+    for b in japonicus_data:
+        try:
+            data_array = provs_munis[b[0]][b[1]]
+            data_array[JAPONICUS_INDEX] = b[2]
+        except KeyError:
+            pass
+
+    for b in koreicus_data:
+        try:
+            data_array = provs_munis[b[0]][b[1]]
+            data_array[KOREICUS_INDEX] = b[2]
         except KeyError:
             pass
 
@@ -161,9 +208,9 @@ def get_tabular_data(ccaa_code,year):
         for municipi in provs_munis[provincia]:
             try:
                 dades = provs_munis[provincia][municipi]
-                data.append( [ provincia, municipi, dades[BITE_INDEX], dades[ALBOPICTUS_INDEX], dades[AEGYPTI_INDEX], dades[CULEX_INDEX], year ] )
+                data.append( [ provincia, municipi, dades[BITE_INDEX], dades[ALBOPICTUS_INDEX], dades[AEGYPTI_INDEX], dades[CULEX_INDEX], dades[JAPONICUS_INDEX], dades[KOREICUS_INDEX], year ] )
             except KeyError:
-                data.append([provincia, municipi, 0, 0, 0, 0, year])
+                data.append([provincia, municipi, 0, 0, 0, 0, 0, 0, year])
     return data
 
 def get_presence_data():
@@ -223,7 +270,9 @@ def load_data():
                     n_albo=d[3],
                     n_aegypti=d[4],
                     n_culex=d[5],
-                    year=d[6],
+                    n_japonicus=d[6],
+                    n_koreicus=d[7],
+                    year=d[8],
                     municipi_code=muni_code,
                     trampeo_albo=trampeo,
                     ma_albo=ma

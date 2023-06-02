@@ -1,5 +1,15 @@
 (function($){
 
+    var barchart_colors = {
+        'Mosquito común': '#1984c5',
+        'Mosquito Tigre': '#fcbf0b',
+        'Picaduras': '#c12e26',
+        'Mosquito fiebre amarilla': '#1d1d1b',
+        'Mosquito del japón': '#e1833f',
+        'Mosquito de corea': '#6dad46',
+        'default': '#bb8fce'
+    }
+
     Highcharts.setOptions({
         lang: {
             downloadCSV: "Descargar hoja de cálculo CSV",
@@ -259,11 +269,15 @@
     }
 
     var addSeries = function(chart, data, series_name){
+        var color = barchart_colors[series_name];
+        if(color == 'null'){
+            color = barchart_colors['default'];
+        }
         chart.addSeries({
             type: 'column',
             name: series_name,
             data: data,
-            //color: site_colors[ year ]
+            color: color
         });
     };
 
@@ -308,6 +322,9 @@
             { title: 'Mosquito Tigre - Trampeo' },
             { title: 'Mosquito Tigre - MA' },
             { title: 'Mosquito común' },
+            { title: 'Mosquito del japón' },
+            { title: 'Mosquito de corea' },
+            { title: 'Mosquito fiebre amarilla' },
             { title: 'Picaduras' }
         ],
         columnDefs: [
@@ -319,12 +336,12 @@
                         return data;
                     }
                     if(data==null){
-                        return '<div style="color:gray">&#9632;Sin datos</div>';
+                        return '<div style="color:gray">Sin datos</div>';
                     }else{
                         if(data == true){
-                            return '<div style="color:red">&#9632;Detectado</div>';
+                            return '<div style="color:red">Detectado</div>';
                         }else{
-                            return '<div style="color:green">&#9632;No detectado</div>';
+                            return '<div style="color:green">No detectado</div>';
                         }
                     }
                 }
@@ -337,18 +354,18 @@
                         return data;
                     }
                     if(data==null){
-                        return '<div style="color:gray">&#9632;Sin datos</div>';
+                        return '<div style="color:gray">Sin datos</div>';
                     }else{
                         if(data == true){
-                            return '<div style="color:#FDDA0D">&#9632;Detectado</div>';
+                            return '<div style="color:#FDDA0D">Detectado</div>';
                         }else{
-                            return '<div style="color:green">&#9632;No detectado</div>';
+                            return '<div style="color:green">No detectado</div>';
                         }
                     }
                 }
             }
         ],
-        'order': [[ 6, "desc" ]],
+        'order': [[ 2, "desc" ]],
         pageLength: 10,
         language: dt_es,
         dom: 'Bfrtip',

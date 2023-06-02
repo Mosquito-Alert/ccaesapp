@@ -18,7 +18,7 @@ def get_ccaa_name_from_code(code):
 
 
 def get_tabular_data(ccaa_code,year):
-    data = [[d.provincia, d.municipi, d.n_albo, d.trampeo_albo, d.ma_albo, d.n_culex, d.n_bite ] for d in ObservationData.objects.filter(ccaa_code=ccaa_code).filter(year=year) ]
+    data = [[d.provincia, d.municipi, d.n_albo, d.trampeo_albo, d.ma_albo, d.n_culex, d.n_japonicus, d.n_koreicus, d.n_aegypti, d.n_bite ] for d in ObservationData.objects.filter(ccaa_code=ccaa_code).filter(year=year) ]
     return data
 
 
