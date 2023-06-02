@@ -322,8 +322,8 @@
             { title: 'Mosquito Tigre - Trampeo' },
             { title: 'Mosquito Tigre - MA' },
             { title: 'Mosquito común' },
-            { title: 'Mosquito del japón' },
-            { title: 'Mosquito de corea' },
+            { title: 'Mosquito del Japón' },
+            { title: 'Mosquito de Corea' },
             { title: 'Mosquito fiebre amarilla' },
             { title: 'Picaduras' }
         ],
