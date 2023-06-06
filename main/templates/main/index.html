@@ -24,23 +24,31 @@
 <main class="container" style="margin-top:80px;">
     <div class="mt-5 section_wrapper">
         <h1>Estadísticas {{ ccaa_name }}</h1>
-        <p><b>Bienvenid@ al portal de Mosquito Alert. Aquí se muestran las estadísticas de participación y de los informes de
-        mosquitos de interés (<i>Aedes</i> invasores y <i>Culex pipiens</i>) y picaduras recibidos en la comunidad a lo largo del año en curso.</b></p>
-        <p><b>Los informes de mosquitos han sido clasificados por la <a href="http://www.mosquitoalert.com/rened/">ReNED</a> (Red Nacional de Entomología Digital). Las imágenes
-            de cada informes son clasificadas de manera independiente por tres miembros de esta comunidad de expertos
-            en entomología, determinando la categoría asignada al informe.</b></p>
+        <p>El portal de Mosquito Alert muestra las estadísticas de participación, los informes de mosquitos de
+            interés (<i>Aedes</i> invasores y <i>Culex pipiens</i>) y de picaduras recibidos en la comunidad a lo
+            largo del año (natural) en curso.</p>
+        <p>Los informes de mosquitos han sido clasificados por la <a href="http://www.mosquitoalert.com/rened/">ReNED</a>
+            (Red Nacional de Entomología Digital) en base al análisis de sus fotografías. Cada informe ha sido clasificado
+            de manera independiente por tres miembros de esta comunidad de expertos en entomología. Al informe se le
+            asigna de manera automática una categoría consensuada, entre las opiniones emitidas, existiendo además una
+            supervisión final en algunos casos.</p>
+        <p>Las especies pueden catalogarse como “confirmada” o “posible” en base a las características propias de cada
+            especie que se aprecien e identifiquen en la fotografía. En las gráficas y tablas no se diferencian ambas
+            categorías, así los datos mostrados para una especie incluyen tanto los informes de “confirmada” como
+            “posible”.</p>
     </div>
     <hr>
     <div class="row">
         <div class="col-md-6 gauge_wrapper">
-            <h4 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>{{ ccaa_name }}</b></h4>
+            <h4 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>{{ ccaa_name }}</b> sin validación previa (incluye todos los informes recibidos: mosquito, picaduras y lugares de cría)</h4>
+            <p></p>
             <h6><i>Última actualización -  {{ update_gauges.last_update|timezone:"Europe/Paris" }} </i></h6>
             <div id="container-number-ccaa"></div>
             <hr>
             <div id="container-flow-ccaa"></div>
         </div>
         <div class="col-md-6 gauge_wrapper">
-            <h4 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>el mundo</b></h4>
+            <h4 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>el mundo</b> (incluye todos los informes: mosquito, picaduras y lugares de cría)</h4>
             <h6><i>Última actualización -  {{ update_gauges.last_update|timezone:"Europe/Paris" }} </i></h6>
             <div id="container-number-world"></div>
             <hr>
@@ -51,6 +59,7 @@
     {% if no_data_barchart %}
     <div class="mt-5 section_wrapper">
         <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por mes en <b>{{ ccaa_name }} - {{ year_name }}</b></h3>
+        <p>La figura representa los informes de mosquitos validados por los expertos de la ReNED. Los datos para una especie incluyen los informes clasificados como “confirmada” o “posible”.</p>
         <h5><i>Última actualización -  {{ update_barchart.last_update|timezone:"Europe/Paris" }} </i></h5>
         <div id="chart" style="width:100%; height:400px;"></div>
     </div>
@@ -64,10 +73,7 @@
     {% if tabular_data_present %}
     <div class="mt-5 section_wrapper">
         <h3 class="titulo_seccion">Observaciones de Mosquitos y Picaduras por municipio en <b>{{ ccaa_name }} - {{ year_name }}</b></h3>
-        <p><b>La tabla muestra el número de informes recibido en cada municipio para las diferentes categorías. Para las especies
-        invasoras se indica si la presencia de estas especies ha sido previamente detectada en cada municipio por métodos tradicionales
-        de trampeo (rojo indica la detección de la especie, verde que no se ha detectado) y por Mosquito Alert (amarillo indica la detección
-        de la especie, verde que no se ha detectado)</b></p>
+        <p>La tabla muestra el número de informes recibido en cada municipio para las diferentes categorías desde principios de año. Para las especies invasoras se indica si la presencia de estas especies ha sido previamente detectada en cada municipio por métodos tradicionales de trampeo (rojo indica la detección de la especie, verde que no se ha detectado) y por Mosquito Alert (amarillo indica la detección de la especie, verde que no se ha detectado).</p>
         <h5><i>Última actualización -  {{ update_observations.last_update|timezone:"Europe/Paris" }} </i></h5>
         <table id="example" class="table table-striped" style="width:100%"></table>
     </div>
@@ -80,6 +86,7 @@
     <hr>
     <div class="mt-5 section_wrapper">
         <h3 class="titulo_seccion">Datos de participación, número de observaciones por <b>comunidad autónoma - {{ year_name }}</b></h3>
+        <p>Las gráficas muestran el número de informes enviados por comunidad autónoma desde principios de año. Se muestran los datos sin validar para los informes de picaduras, del total de informes enviados como mosquitos (validados y por validar) y del de lugares de cría.</p>
         <h5><i>Última actualización -  {{ update_participation.last_update|timezone:"Europe/Paris" }} </i></h5>
         <div class="row">
             <div id="p_bites" class="col-md-6"></div>
