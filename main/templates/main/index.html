@@ -17,13 +17,19 @@
             padding-bottom: 60px;
             padding-top: 0px;
         }
+        table.dataTable td {
+            font-size: 0.8em;
+        }
+        table.dataTable th {
+            font-size: 0.8em;
+        }
     </style>
 {% endblock %}
 
 {% block main %}
 <main class="container" style="margin-top:80px;">
     <div class="mt-5 section_wrapper">
-        <h1>Estadísticas {{ ccaa_name }}</h1>
+        <h1>Estadísticas Comunidad Autónoma: {{ ccaa_name }}</h1>
         <p>El portal de Mosquito Alert muestra las estadísticas de participación, los informes de mosquitos de
             interés (<i>Aedes</i> invasores y <i>Culex pipiens</i>) y de picaduras recibidos en la comunidad a lo
             largo del año (natural) en curso.</p>
@@ -40,7 +46,8 @@
     <hr>
     <div class="row">
         <div class="col-md-6 gauge_wrapper">
-            <h4 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>{{ ccaa_name }}</b> sin validación previa (incluye todos los informes recibidos: mosquito, picaduras y lugares de cría)</h4>
+            <h4 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>{{ ccaa_name }}</b></h4>
+            <p>Datos sin validación previa (incluye todos los informes recibidos: mosquito, picaduras y lugares de cría)</p>
             <p></p>
             <h6><i>Última actualización -  {{ update_gauges.last_update|timezone:"Europe/Paris" }} </i></h6>
             <div id="container-number-ccaa"></div>
@@ -48,7 +55,8 @@
             <div id="container-flow-ccaa"></div>
         </div>
         <div class="col-md-6 gauge_wrapper">
-            <h4 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>el mundo</b> (incluye todos los informes: mosquito, picaduras y lugares de cría)</h4>
+            <h4 class="titulo_seccion">Datos enviados a la app Mosquito Alert en tiempo real desde <b>el mundo</b></h4>
+            <p>Datos sin validación previa (incluye todos los informes recibidos: mosquito, picaduras y lugares de cría)</p>
             <h6><i>Última actualización -  {{ update_gauges.last_update|timezone:"Europe/Paris" }} </i></h6>
             <div id="container-number-world"></div>
             <hr>

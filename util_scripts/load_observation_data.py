@@ -213,11 +213,28 @@ def get_tabular_data(ccaa_code,year):
                 data.append([provincia, municipi, 0, 0, 0, 0, 0, 0, year])
     return data
 
+def get_presence_data_japonicus():
+    retval = {}
+    cursor = connection.cursor()
+    cursor.execute("""
+            select mn.year,mm.natcode,mn.trampeo,mn.ma from main_natcodepresence mn,main_municipalitiesnatcode mm where mn.natmunicipality_id = mm.id and mn.mosquito_class = 'japonicus'
+        """)
+    results = cursor.fetchall()
+    for r in results:
+        shortcode = r[1][len(r[1]) - 5:]
+        # retval[r[0]] = {}
+        try:
+            retval[r[0]]
+        except KeyError:
+            retval[r[0]] = {}
+        retval[r[0]][shortcode] = [r[2], r[3]]
+    return retval
+
 def get_presence_data():
     retval = {}
     cursor = connection.cursor()
     cursor.execute("""
-        select mn.year,mm.natcode,mn.trampeo,mn.ma from main_natcodepresence mn,main_municipalitiesnatcode mm where mn.natmunicipality_id = mm.id
+        select mn.year,mm.natcode,mn.trampeo,mn.ma from main_natcodepresence mn,main_municipalitiesnatcode mm where mn.natmunicipality_id = mm.id and mn.mosquito_class = 'albopictus'
     """)
     results = cursor.fetchall()
     for r in results:
@@ -243,6 +260,7 @@ def load_data():
     to_write = []
     muni_table = get_muni_table()
     presence_data = get_presence_data()
+    presence_data_japo = get_presence_data_japonicus()
     for year in range(2020,this_year+1):
         for ccaa in ccaas:
             print("Loading data for {0} - {1}".format( ccaa, year ))
@@ -251,6 +269,8 @@ def load_data():
             data = get_tabular_data(ccaa_code,year)
             trampeo = None
             ma = None
+            trampeo_japo = None
+            ma_japo = None
             for d in data:
                 muni_code = muni_table[d[1]]
                 muni_shortcode = muni_code[ len(muni_code) -5: ]
@@ -259,6 +279,13 @@ def load_data():
                     presence_data_natcode = presence_data_year[muni_shortcode]
                     trampeo = presence_data_natcode[0]
                     ma = presence_data_natcode[1]
+                except KeyError:
+                    pass
+                try:
+                    presence_data_year = presence_data_japo[year]
+                    presence_data_natcode = presence_data_year[muni_shortcode]
+                    trampeo_japo = presence_data_natcode[0]
+                    ma_japo = presence_data_natcode[1]
                 except KeyError:
                     pass
                 to_write.append( ObservationData(
@@ -275,7 +302,9 @@ def load_data():
                     year=d[8],
                     municipi_code=muni_code,
                     trampeo_albo=trampeo,
-                    ma_albo=ma
+                    ma_albo=ma,
+                    trampeo_japo=trampeo_japo,
+                    ma_japo=ma_japo
                 ) )
     ObservationData.objects.bulk_create(to_write)
     aware_datetime = make_aware(datetime.now())

@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.name_processor',
             ],
         },
     },
@@ -138,6 +139,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = "/"
+
+APP_NAME = 'MADatosApp'
 
 if not os.getenv('GITHUB_WORKFLOW'):
     from ccaesapp.settings_local import *

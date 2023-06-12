@@ -6,6 +6,7 @@ from django.db import connection
 from main.models import ParticipationData, ObservationData, ObservationBarChartData, DataUpdateMetadata, SpeedMeterData, RuntimeSettings
 from django.contrib.auth.decorators import login_required, user_passes_test
 import json
+import ccaesapp.settings as settings
 
 
 def get_ccaa_name_from_code(code):
@@ -18,7 +19,7 @@ def get_ccaa_name_from_code(code):
 
 
 def get_tabular_data(ccaa_code,year):
-    data = [[d.provincia, d.municipi, d.n_albo, d.trampeo_albo, d.ma_albo, d.n_culex, d.n_japonicus, d.n_koreicus, d.n_aegypti, d.n_bite ] for d in ObservationData.objects.filter(ccaa_code=ccaa_code).filter(year=year) ]
+    data = [[d.provincia, d.municipi, d.n_albo, d.trampeo_albo, d.ma_albo, d.n_culex, d.n_japonicus, d.trampeo_japo, d.ma_japo, d.n_koreicus, d.n_aegypti, d.n_bite ] for d in ObservationData.objects.filter(ccaa_code=ccaa_code).filter(year=year) ]
     return data
 
 
@@ -62,45 +63,46 @@ def get_speedmeter_data(ccaa=None):
     return data
 
 
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
-def index_par(request, ccaa=None, year=None):
-    ccaa_name = get_ccaa_name_from_code(ccaa)
-    ccaa_code = ccaa
-    year_name = year
-
-
-    dataSet = get_tabular_data(ccaa_code, year_name)
-    participation_data = get_participation_data(year_name)
-
-    update_barchart = DataUpdateMetadata.objects.get(class_name=ObservationBarChartData._meta.verbose_name)
-    update_observations = DataUpdateMetadata.objects.get(class_name=ObservationData._meta.verbose_name)
-    update_participation = DataUpdateMetadata.objects.get(class_name=ParticipationData._meta.verbose_name)
-    update_gauges = DataUpdateMetadata.objects.get(class_name=SpeedMeterData._meta.verbose_name)
-
-    all_sliced = [ [ d.n, d.month,d.category ] for d in ObservationBarChartData.objects.filter(ccaa_code=ccaa).filter(year=year)]
-
-    no_data_barchart = True
-    if len(all_sliced) == 0:
-        no_data_barchart = False
-
-    is_tabular_data_present = tabular_data_present(participation_data)
-
-    context = {
-        'all_sliced': json.dumps(all_sliced),
-        'no_data_barchart': no_data_barchart,
-        'ccaa_name': ccaa_name,
-        'year_name': year_name,
-        'dataSet': json.dumps(dataSet),
-        'tabular_data_present': is_tabular_data_present,
-        'participation_data': json.dumps(participation_data),
-        'update_barchart': update_barchart,
-        'update_observations': update_observations,
-        'update_participation': update_participation,
-        'update_gauges': update_gauges,
-    }
-
-    return render(request, 'main/index.html', context)
+# @login_required
+# @user_passes_test(lambda u: u.is_superuser)
+# def index_par(request, ccaa=None, year=None):
+#     ccaa_name = get_ccaa_name_from_code(ccaa)
+#     ccaa_code = ccaa
+#     year_name = year
+#
+#
+#     dataSet = get_tabular_data(ccaa_code, year_name)
+#     participation_data = get_participation_data(year_name)
+#
+#     update_barchart = DataUpdateMetadata.objects.get(class_name=ObservationBarChartData._meta.verbose_name)
+#     update_observations = DataUpdateMetadata.objects.get(class_name=ObservationData._meta.verbose_name)
+#     update_participation = DataUpdateMetadata.objects.get(class_name=ParticipationData._meta.verbose_name)
+#     update_gauges = DataUpdateMetadata.objects.get(class_name=SpeedMeterData._meta.verbose_name)
+#
+#     all_sliced = [ [ d.n, d.month,d.category ] for d in ObservationBarChartData.objects.filter(ccaa_code=ccaa).filter(year=year)]
+#
+#     no_data_barchart = True
+#     if len(all_sliced) == 0:
+#         no_data_barchart = False
+#
+#     is_tabular_data_present = tabular_data_present(participation_data)
+#
+#     context = {
+#         'all_sliced': json.dumps(all_sliced),
+#         'no_data_barchart': no_data_barchart,
+#         'ccaa_name': ccaa_name,
+#         'year_name': year_name,
+#         'dataSet': json.dumps(dataSet),
+#         'tabular_data_present': is_tabular_data_present,
+#         'participation_data': json.dumps(participation_data),
+#         'update_barchart': update_barchart,
+#         'update_observations': update_observations,
+#         'update_participation': update_participation,
+#         'update_gauges': update_gauges,
+#         'app_name': settings.APP_NAME,
+#     }
+#
+#     return render(request, 'main/index.html', context)
 
 
 def tabular_data_present(participation_data):
@@ -159,6 +161,6 @@ def index(request):
         'update_participation': update_participation,
         'update_gauges': update_gauges,
         'speedmeter_data_ccaa': speedmeter_data_ccaa,
-        'speedmeter_data_global': speedmeter_data_global,
+        'speedmeter_data_global': speedmeter_data_global
     }
     return render(request, 'main/index.html', context)

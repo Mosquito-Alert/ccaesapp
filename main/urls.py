@@ -3,6 +3,6 @@ from main import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('<str:ccaa>/<int:year>', views.index_par, name='index_par')
+    #path('<str:ccaa>/<int:year>', views.index_par, name='index_par')
 ]
 

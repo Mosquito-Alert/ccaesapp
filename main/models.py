@@ -40,6 +40,8 @@ class ObservationData(models.Model):
     trampeo_albo = models.BooleanField(null=True, blank=True)
     ma_albo = models.BooleanField(null=True, blank=True)
     municipi_code = models.CharField(max_length=150,null=True)
+    trampeo_japo = models.BooleanField(null=True, blank=True)
+    ma_japo = models.BooleanField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'observationdata'

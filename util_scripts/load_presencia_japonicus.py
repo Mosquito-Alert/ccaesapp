@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 def load_data(year):
     to_write = []
-    with open(os.path.join(BASE_DIR, 'util_scripts/PresenciaTigre.csv')) as csvfile:
+    with open(os.path.join(BASE_DIR, 'util_scripts/PresenciaJaponicus.csv')) as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         next(reader, None)
         for row in reader:
@@ -17,11 +17,11 @@ def load_data(year):
                 natmunicipality = MunicipalitiesNatCode.objects.get(natcode=row[0])
                 trampeo = True if row[2] == '1' else False
                 ma = True if row[3] == '1' else False
-                to_write.append(NatCodePresence( natmunicipality=natmunicipality, trampeo=trampeo, ma=ma, mosquito_class="albopictus", year=year))
+                to_write.append(NatCodePresence( natmunicipality=natmunicipality, trampeo=trampeo, ma=ma, mosquito_class="japonicus", year=year))
             except MunicipalitiesNatCode.DoesNotExist:
                 print("Municipality with code {0} does not exist".format(row[0]))
 
-    NatCodePresence.objects.filter(year=year).filter(mosquito_class="albopictus").delete()
+    NatCodePresence.objects.filter(year=year).filter(mosquito_class="japonicus").delete()
     NatCodePresence.objects.bulk_create(to_write)
 
 

@@ -323,6 +323,8 @@
             { title: 'Mosquito Tigre - MA' },
             { title: 'Mosquito común' },
             { title: 'Mosquito del Japón' },
+            { title: 'Mosquito del Japón - Trampeo' },
+            { title: 'Mosquito del Japón - MA' },
             { title: 'Mosquito de Corea' },
             { title: 'Mosquito fiebre amarilla' },
             { title: 'Picaduras' }
@@ -348,6 +350,42 @@
             },
             {
                 'targets':4,
+                'sortable': true,
+                'render': function(data, type){
+                    if (type === 'sort' || type === 'type') {
+                        return data;
+                    }
+                    if(data==null){
+                        return '<div style="color:gray">Sin datos</div>';
+                    }else{
+                        if(data == true){
+                            return '<div style="color:#FDDA0D">Detectado</div>';
+                        }else{
+                            return '<div style="color:green">No detectado</div>';
+                        }
+                    }
+                }
+            },
+            {
+                'targets':7,
+                'sortable': true,
+                'render': function(data, type){
+                    if (type === 'sort' || type === 'type') {
+                        return data;
+                    }
+                    if(data==null){
+                        return '<div style="color:gray">Sin datos</div>';
+                    }else{
+                        if(data == true){
+                            return '<div style="color:red">Detectado</div>';
+                        }else{
+                            return '<div style="color:green">No detectado</div>';
+                        }
+                    }
+                }
+            },
+            {
+                'targets':8,
                 'sortable': true,
                 'render': function(data, type){
                     if (type === 'sort' || type === 'type') {
