@@ -71,6 +71,7 @@ class NutsEurope(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nuts = models.ForeignKey(NutsEurope, null=True, on_delete=models.CASCADE, related_name='users_by_nuts')
+    accepted_terms = models.BooleanField(default=False)
 
     def __str__(self):
         nuts_str = "No nuts" if self.nuts is None else self.nuts.nuts_name
